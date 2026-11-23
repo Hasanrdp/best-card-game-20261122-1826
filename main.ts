@@ -14,8 +14,6 @@ const outputDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 const gameDir = join(repoRoot, 'game');
 const shotsDir = join(repoRoot, 'screenshots');
 
-// Start from a clean output directory so a stale file can never ride along.
-rmSync(outputDir, { recursive: true, force: true });
 mkdirSync(outputDir, { recursive: true });
 cpSync(gameDir, join(outputDir, 'game'), { recursive: true });
 if (existsSync(shotsDir)) {
