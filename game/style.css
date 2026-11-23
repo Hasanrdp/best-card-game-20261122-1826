@@ -1,0 +1,199 @@
+/* Court of Embers: the table. A dark green baize with gold trim, cards in
+   cream with a suit-coloured heart, and everything big enough to read when
+   the screenshot is shrunk to a thumbnail. */
+:root {
+  --baize: #14301f;
+  --baize-deep: #0c1f13;
+  --gold: #d9a441;
+  --gold-dim: #8a6a2a;
+  --cream: #f6efdd;
+  --ink: #241d12;
+  --panel: #1d4029;
+  --panel-edge: #2c5a3a;
+  --danger: #e5484d;
+  --heal: #46a758;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: radial-gradient(1200px 700px at 50% 18%, var(--baize) 0%, var(--baize-deep) 78%);
+  color: var(--cream);
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+#root { max-width: 1280px; margin: 0 auto; padding: 10px 18px 4px; }
+
+.table { position: relative; display: flex; flex-direction: column; gap: 10px; }
+
+.topbar { display: flex; justify-content: space-between; align-items: center; }
+.game-title {
+  font-size: 30px; letter-spacing: 3px; font-variant: small-caps;
+  color: var(--gold); text-shadow: 0 2px 0 rgba(0,0,0,.45);
+}
+.top-buttons { display: flex; gap: 8px; }
+.icon-button {
+  font: inherit; font-size: 14px; color: var(--cream);
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: 8px; padding: 6px 12px; cursor: pointer;
+}
+.icon-button:hover { border-color: var(--gold); }
+
+/* --- sides: life bars --- */
+.opponent-row, .player-row { display: flex; gap: 14px; align-items: stretch; }
+.opponent-side-box, .player-side-box { width: 300px; }
+.player-side-box { align-self: center; }
+.side-head { display: flex; justify-content: space-between; align-items: baseline; }
+.side-name { font-size: 19px; font-variant: small-caps; letter-spacing: 1px; }
+.block-badge {
+  font-size: 15px; color: #bfe3ff; background: #173a55;
+  border: 1px solid #2c5a7a; border-radius: 999px; padding: 2px 10px;
+}
+.lifebar {
+  position: relative; height: 26px; margin-top: 5px;
+  background: #0a1710; border: 1px solid var(--panel-edge); border-radius: 999px;
+  overflow: hidden;
+}
+.lifebar-fill { height: 100%; background: linear-gradient(90deg, #3f9e57, #7cc98f); transition: width .45s ease; }
+.lifebar-fill.low { background: linear-gradient(90deg, #b3372f, #e5484d); }
+.lifebar-text {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: bold; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.7);
+}
+
+/* --- the telegraphed intent --- */
+.intent-box { width: 190px; text-align: center; }
+.intent-label { font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #e8c97e; margin-bottom: 4px; }
+.intent-card { display: flex; justify-content: center; }
+.intent-empty { color: #9db8a4; font-size: 22px; padding: 30px 0; }
+
+/* --- hands --- */
+.opponent-hand { flex: 1; display: flex; gap: 6px; align-items: center; justify-content: flex-end; }
+.hand-count { font-size: 14px; color: #c9d8c8; margin-left: 8px; }
+.player-hand { flex: 1; display: flex; gap: 10px; justify-content: center; align-items: flex-end; min-height: 224px; }
+.energy-box { width: 210px; text-align: right; align-self: center; }
+.energy-label { font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #e8c97e; margin-right: 6px; }
+.ember-pip { font-size: 20px; color: #4a3a22; margin-right: 2px; }
+.ember-pip.lit { color: #ffb340; text-shadow: 0 0 8px rgba(255, 179, 64, .8); }
+.round-label { font-size: 17px; margin-top: 8px; color: #f0d9a8; }
+.deck-count { font-size: 13px; color: #9db8a4; margin-top: 3px; }
+
+/* --- the middle of the table --- */
+.middle { display: flex; gap: 14px; align-items: center; min-height: 150px; }
+.played { flex: 1; display: flex; gap: 8px; justify-content: center; min-height: 140px; align-items: center; }
+.played-empty { color: #9db8a4; font-style: italic; font-size: 15px; }
+.log { width: 330px; font-size: 14px; line-height: 1.45; color: #d8e4d5; }
+.log-line { margin-bottom: 4px; }
+.end-turn {
+  font: inherit; font-size: 19px; font-weight: bold; color: #241d12;
+  background: linear-gradient(180deg, #f2c14e, var(--gold));
+  border: 1px solid #f7d774; border-radius: 12px; padding: 14px 22px; cursor: pointer;
+  box-shadow: 0 3px 0 var(--gold-dim); min-width: 170px;
+}
+.end-turn:hover:not(:disabled) { filter: brightness(1.08); }
+.end-turn:disabled { opacity: .45; cursor: default; }
+
+/* --- cards --- */
+.card {
+  position: relative; width: 148px; height: 208px; flex: none;
+  background: linear-gradient(180deg, #fffaf0, #efe3c8);
+  color: var(--ink); border-radius: 12px;
+  border: 3px solid var(--suit, #888);
+  box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 8px 18px rgba(0,0,0,.4);
+  text-align: center; cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+  user-select: none;
+}
+.card.suit-ember { --suit: #e5484d; }
+.card.suit-thorn { --suit: #46a758; }
+.card.suit-stone { --suit: #e5a13a; }
+.card.suit-tide { --suit: #3e9bdc; }
+.player-hand .card:hover { transform: translateY(-14px) scale(1.04); }
+.card.unplayable { opacity: .55; cursor: default; }
+.card.unplayable:hover { transform: none; }
+.card.dimmed { opacity: .6; }
+.card.small { width: 104px; height: 146px; cursor: default; }
+.card.small .card-glyph { font-size: 30px; margin-top: 10px; }
+.card.small .card-name { font-size: 12px; min-height: 0; margin-top: 4px; }
+.card.small .card-value { font-size: 22px; }
+.card.small .card-kind { margin-top: 1px; }
+.card-cost { position: absolute; top: 6px; left: 8px; display: flex; gap: 2px; }
+.card-cost .ember { color: #d97a1f; font-size: 15px; text-shadow: 0 0 4px rgba(217, 122, 31, .5); }
+.card-glyph { font-size: 44px; line-height: 1; margin-top: 26px; color: var(--suit, #888); }
+.card-suit { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #6b5b3e; margin-top: 2px; }
+.card-name { font-size: 15px; font-weight: bold; margin-top: 8px; padding: 0 6px; line-height: 1.15; min-height: 34px; }
+.card-value { font-size: 34px; font-weight: bold; line-height: 1; color: var(--suit, #888); }
+.card-kind { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #6b5b3e; margin-top: 3px; }
+.card-tags {
+  position: absolute; bottom: 6px; left: 0; right: 0;
+  font-size: 11px; font-weight: bold; color: #a35400; letter-spacing: .5px;
+}
+.card-back {
+  width: 84px; height: 118px; cursor: default;
+  background: repeating-linear-gradient(45deg, #274a34 0 10px, #1d4029 10px 20px);
+  border-color: var(--gold-dim); display: flex; align-items: center; justify-content: center;
+}
+.card-back-seal { font-size: 34px; color: var(--gold); opacity: .85; }
+
+/* --- overlays: title, victory, defeat --- */
+.overlay {
+  position: absolute; inset: -6px; z-index: 10;
+  background: rgba(6, 18, 11, .88);
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 16px;
+}
+.overlay.hidden { display: none; }
+.overlay-panel { max-width: 680px; text-align: center; padding: 26px 30px; }
+.overlay-kicker { letter-spacing: 4px; font-size: 14px; color: var(--gold); }
+.overlay-title { font-size: 64px; margin: 8px 0 10px; letter-spacing: 2px; color: var(--cream); }
+.overlay-title.win { color: #ffd76a; text-shadow: 0 0 26px rgba(255, 215, 106, .55); }
+.overlay-title.loss { color: #e5484d; text-shadow: 0 0 26px rgba(229, 72, 77, .45); }
+.overlay-story { font-size: 18px; line-height: 1.5; color: #e6ddc6; }
+.overlay-rules { margin: 16px 0; display: flex; flex-direction: column; gap: 6px; }
+.rule { font-size: 15px; color: #cfe0cb; }
+.overlay-stats { display: flex; gap: 14px; justify-content: center; margin: 16px 0 20px; }
+.stat {
+  background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 10px;
+  padding: 10px 16px; font-size: 15px; white-space: pre-line; line-height: 1.5; min-width: 110px;
+}
+.big-button {
+  font: inherit; font-size: 22px; font-weight: bold; color: #241d12;
+  background: linear-gradient(180deg, #f2c14e, var(--gold));
+  border: 1px solid #f7d774; border-radius: 12px; padding: 14px 30px; cursor: pointer;
+  box-shadow: 0 4px 0 var(--gold-dim);
+}
+.big-button:hover { filter: brightness(1.08); }
+.overlay-foot { margin-top: 14px; font-size: 13px; color: #9db8a4; }
+
+/* --- floating damage numbers --- */
+.float-layer { position: absolute; inset: 0; pointer-events: none; z-index: 20; overflow: hidden; }
+.float-number {
+  position: absolute; left: 50%; top: 34%; transform: translateX(-50%);
+  font-size: 44px; font-weight: bold; animation: float-up 1.3s ease-out forwards;
+  text-shadow: 0 2px 6px rgba(0,0,0,.7);
+}
+.float-number.damage-foe { color: #ffb3b5; }
+.float-number.damage-you { color: #ff6b6f; top: 62%; }
+.float-number.heal { color: #8fd6a0; }
+@keyframes float-up {
+  0% { opacity: 0; margin-top: 16px; }
+  15% { opacity: 1; }
+  100% { opacity: 0; margin-top: -46px; }
+}
+
+/* --- suit legend + screen-reader line --- */
+.suit-legend { display: flex; gap: 18px; justify-content: center; padding: 8px 0 10px; flex-wrap: wrap; }
+.legend-chip { font-size: 13px; color: var(--suit-colour); }
+#status {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .card { width: 118px; height: 172px; }
+  .card-glyph { font-size: 34px; }
+  .card-value { font-size: 26px; }
+  .overlay-title { font-size: 44px; }
+}
